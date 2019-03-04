@@ -29,14 +29,27 @@ class Node:
         # gain, and the value for maximum gain at that node
         return gain_tuple(None,0)
     
-    def split(self):
+    def split(self, attribute):
         # TODO this should split this node according to the arrtibute with highest gain, i.e. set val0
         # and val1 to point to new nodes
         return 0
         
+    def filter_data(self):
+        # At first initialize every row to True
+        final_filter = pd.Series(np.array([True] * data.shape[0]))
+        # And with a filter for every attribute, value pair in ancestors
+        for attribute, value in self.ancestors:
+            final_filter &= data[attribute] == value
+        # This will return a subset of the data containing only the rows with the values matching ancestors
+        return self.data[final_filter]
+    
     def purity_test(self):
-        # TODO if the node is pure this should return the class of the node
-        # else it should return None
+        # If the sample is pure, returns class, else returns None
+        mean = data['Class'].mean()
+        if mean == 0:
+            return 0
+        elif mean == 1:
+            return 1
         return None
 
 def info_gain(data, attributes):
