@@ -21,8 +21,8 @@ validation_set = pd.read_csv(args.validation_set[0])
 test_set = pd.read_csv(args.test_set[0])
 
 # Initialize the two trees
-col_list = training_set.columns.to_list()
-attributes = col_list.remove('Class')
+attributes = training_set.columns.to_list()
+attributes.remove('Class')
 
 tree1 = decision_tree.Node(attributes, [], training_set, decision_tree.info_gain)
 tree2 = decision_tree.Node(attributes, [], training_set, decision_tree.var_impurity)
