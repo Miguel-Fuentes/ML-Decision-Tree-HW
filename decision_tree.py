@@ -95,15 +95,16 @@ def info_gain(node,attribute):
     """This will return the information gain that you get from splitting a node
     with that has the data "data" on the attribute "attribute"
     """
-    _, data_counts = np.unique(node.data['Class'], return_counts=True)
+    data_subset1 = filter_data(node.data,node.ancestors)
+    _, data_counts = np.unique(data_subset1['Class'], return_counts=True)
     base_entropy = entropy(data_counts,base=2)
-    num_values = len(node.data)
+    num_values = len(data_subset1)
     entropy_sum = 0
     
     for value in [0,1]:
-        data_subset = filter_data(node.data,node.ancestors + [(attribute,value)])
-        _, subset_counts = np.unique(data_subset['Class'], return_counts=True)
-        entropy_sum += (len(data_subset)/num_values) * entropy(subset_counts,base=2)
+        data_subset2 = filter_data(node.data,node.ancestors + [(attribute,value)])
+        _, subset_counts = np.unique(data_subset2['Class'], return_counts=True)
+        entropy_sum += (len(data_subset2)/num_values) * entropy(subset_counts,base=2)
     
     return base_entropy - entropy_sum
 
