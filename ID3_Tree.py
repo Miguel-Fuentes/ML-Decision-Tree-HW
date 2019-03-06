@@ -27,7 +27,7 @@ attributes.remove('Class')
 tree1 = decision_tree.Node(attributes, [], training_set, decision_tree.info_gain)
 tree2 = decision_tree.Node(attributes, [], training_set, decision_tree.var_impurity)
 
-# Hopefully once all of the TODOs are filled in these lines should train the
-# trees correctly
-# tree1.train()
+
+tree1.train()
+# var_impurity not implemented yet
 # tree2.train()
