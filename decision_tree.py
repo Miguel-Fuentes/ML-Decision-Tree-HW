@@ -16,7 +16,7 @@ class Node:
         self.data = data
         
         self.result = self.purity_test() # This should be None unless the node is pure
-        self.attributes = [] if self.result else attributes # If the node is pure this should be empty
+        self.attributes = [] if self.result != None else attributes # If the node is pure this should be empty
         
         self.val0 = None
         self.val1 = None
@@ -28,7 +28,8 @@ class Node:
         return (f'Heuristic: {self.heuristic}\n'\
                 f'Ancestors: {self.ancestors}\n'\
                 f'Result: {self.result}\n'\
-                f'Attributes: {self.attributes}\n')
+                f'Attributes: {self.attributes}\n'\
+                f'Has children: {self.val0 != None}\n')
                         
     def train(self):
         """ This will continue splitting the tree until every leaf node is pure and the training data
@@ -42,12 +43,12 @@ class Node:
             
     def max_gain(self):
         """ 
-        If the node has children it will return the (node, gain) tuple of the child with the
+        If the node has children it will return the (node, attribute, gain) tuple of the child with the
         highest gain
-        If the node does not have children and is not pure it will return the (node, gain) tuple
+        If the node does not have children and is not pure it will return the (node, attribute, gain) tuple
         with itself as the node and the highest heuristic score of splitting on any of its attributes
         as the gain
-        If the node is pure it will return (None, 0) as it can no longer be split
+        If the node is pure it will return (None, '', 0) as it can no longer be split
         """
         if self.val1:
             val1_gain_tuple, val0_gain_tuple = self.val1.max_gain(), self.val0.max_gain()
@@ -55,7 +56,7 @@ class Node:
                 return val1_gain_tuple
             else:
                 return val0_gain_tuple
-        if self.attributes:
+        elif self.attributes:
             filtered_data = filter_data(self.data,self.ancestors)
             max_attribute, max_gain = max([(attribute,
                                             self.heuristic(self,attribute)) for attribute in self.attributes],
@@ -69,6 +70,7 @@ class Node:
         if attribute not in self.attributes:
             raise KeyError('Attribute not present in node')
     
+        # list() is used to make a copy of the list instead of pointing to the same list
         child_attributes = list(self.attributes)
         child_attributes.remove(attribute)
     
