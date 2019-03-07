@@ -1,5 +1,6 @@
 import pandas as pd
 import argparse
+from sklearn.metrics import accuracy_score
 import decision_tree # this is the moduole where we write the node class and implement the algorithm
 
 # Here we initialize a parser to read the command line arguments to the script
@@ -14,11 +15,13 @@ parser.add_argument('to_print',type=bool,help='Whether or not to print the decis
 
 # Here we parse the arguments
 args = parser.parse_args()
+print('Arguments Parsed')
 
 # Load the data into pandas dataframes
 training_set = pd.read_csv(args.training_set[0])
 validation_set = pd.read_csv(args.validation_set[0])
 test_set = pd.read_csv(args.test_set[0])
+print('CSVs Read')
 
 # Initialize the two trees
 attributes = training_set.columns.to_list()
@@ -26,8 +29,23 @@ attributes.remove('Class')
 
 tree1 = decision_tree.Node(attributes, [], training_set, decision_tree.info_gain)
 tree2 = decision_tree.Node(attributes, [], training_set, decision_tree.var_impurity)
-
+print('Trees Initialized, trees will train now this may take up to 5 minutes')
 
 tree1.train()
 # var_impurity not implemented yet
 # tree2.train()
+print('Trees Trained')
+
+test_X = test_set.drop(['Class'],axis='columns')
+test_Y = test_set['Class']
+
+tree1_pred = tree1.predict(test_X)
+#tree2_pred = tree2.predict(test_X)
+
+tree1_acc = accuracy_score(test_Y,tree1_pred)
+#tree2_acc = accuracy_score(test_Y,tree2_pred)
+
+print('Trees Evaluated',
+      f'Entropy Based Tree Accuracy: {tree1_acc}',
+      f'Variance Impurity Based Tree Accuracy: Not Implemented Yet',
+      sep='\n')

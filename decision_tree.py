@@ -90,6 +90,21 @@ class Node:
         elif mean == 1:
             return 1
         return None
+    
+    def predict_row(self, row):
+        current_node = self
+        result = self.result
+        while result == None and current_node.val0 != None:
+            attr = [attribute for attribute in current_node.attributes if attribute not in current_node.val0.attributes]
+            if row[attr][0] == 0:
+                current_node = current_node.val0
+            else:
+                current_node = current_node.val1
+            result = current_node.result
+        return current_node.result
+    
+    def predict(self, df):
+        return df.apply(self.predict_row, axis=1)
 
 def info_gain(node,attribute):
     """This will return the information gain that you get from splitting a node
