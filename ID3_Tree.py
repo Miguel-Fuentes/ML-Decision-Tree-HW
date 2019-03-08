@@ -13,6 +13,9 @@ parser.add_argument('validation_set',type=str,help='Address to validation set',n
 parser.add_argument('test_set',type=str,help='Address to test set',nargs=1)
 parser.add_argument('to_print',type=bool,help='Whether or not to print the decision trees',nargs=1)
 
+# EX command line input (replace 0 and 0 with L and K)
+# python id3_tree.py 0 0 data_sets1/training_set.csv data_sets1/validation_set.csv data_sets1/test_set.csv no
+
 # Here we parse the arguments
 args = parser.parse_args()
 print('Arguments Parsed')
@@ -32,7 +35,6 @@ tree2 = decision_tree.Node(attributes, [], training_set, decision_tree.var_impur
 print('Trees Initialized, trees will train now this may take up to 5 minutes')
 
 tree1.train()
-# var_impurity not implemented yet
 # tree2.train()
 print('Trees Trained')
 
@@ -40,12 +42,12 @@ test_X = test_set.drop(['Class'],axis='columns')
 test_Y = test_set['Class']
 
 tree1_pred = tree1.predict(test_X)
-#tree2_pred = tree2.predict(test_X)
+# tree2_pred = tree2.predict(test_X)
 
-tree1_acc = accuracy_score(test_Y,tree1_pred)
-#tree2_acc = accuracy_score(test_Y,tree2_pred)
+tree1_acc =  accuracy_score(test_Y,tree1_pred)
+tree2_acc = 0 #accuracy_score(test_Y,tree2_pred)
 
 print('Trees Evaluated',
       f'Entropy Based Tree Accuracy: {tree1_acc}',
-      f'Variance Impurity Based Tree Accuracy: Not Implemented Yet',
+      f'Variance Impurity Based Tree Accuracy: {tree2_acc}',
       sep='\n')
