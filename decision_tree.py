@@ -18,6 +18,7 @@ class Node:
         
         self.result = self.purity_test() # This should be None unless the node is pure
         self.attributes = [] if self.result != None else attributes # If the node is pure this should be empty
+        self.split_attr = None
         
         self.val0 = None
         self.val1 = None
@@ -70,7 +71,9 @@ class Node:
         """
         if attribute not in self.attributes:
             raise KeyError('Attribute not present in node')
-    
+        
+        self.split_attr = attribute
+        
         # list() is used to make a copy of the list instead of pointing to the same list
         child_attributes = list(self.attributes)
         child_attributes.remove(attribute)
@@ -96,8 +99,7 @@ class Node:
         current_node = self
         result = self.result
         while result == None and current_node.val0 != None:
-            attr = [attribute for attribute in current_node.attributes if attribute not in current_node.val0.attributes]
-            if row[attr][0] == 0:
+            if row[current_node.split_attr] == 0:
                 current_node = current_node.val0
             else:
                 current_node = current_node.val1
