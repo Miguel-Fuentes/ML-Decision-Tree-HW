@@ -23,6 +23,19 @@ class Node:
         self.val0 = None
         self.val1 = None
         
+    def __str__(self):
+        if self.result != None:
+            return str(self.result)
+        else:
+            depth = len(self.ancestors)
+            output = '\n' + '| ' * depth
+            output += f'{self.split_attr} = 0: '
+            output += str(self.val0)
+            output += '\n' + '| ' * depth
+            output += f'{self.split_attr} = 1: '
+            output += str(self.val1)
+            return output
+        
     def __repr__(self):
         """ This is used for debugging and will not return the tree in a pretty way,
         only the info about this node will be returned
@@ -31,6 +44,7 @@ class Node:
                 f'Ancestors: {self.ancestors}\n'\
                 f'Result: {self.result}\n'\
                 f'Attributes: {self.attributes}\n'\
+                f'Split Attribute: {self.split_attr}\n'\
                 f'Has children: {self.val0 != None}\n')
                         
     def train(self):
