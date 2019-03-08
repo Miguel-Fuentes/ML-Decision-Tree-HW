@@ -32,8 +32,8 @@ print('CSVs Read')
 attributes = training_set.columns.to_list()
 attributes.remove('Class')
 
-tree1 = decision_tree.Node(attributes, [], training_set, decision_tree.info_gain)
-tree2 = decision_tree.Node(attributes, [], training_set, decision_tree.var_impurity)
+tree1 = decision_tree.Node(attributes, [], training_set, decision_tree.entropy_gain)
+tree2 = decision_tree.Node(attributes, [], training_set, decision_tree.impurity_gain)
 print('Trees Initialized, trees will train now this may take up to 5 minutes')
 
 tree1.train()

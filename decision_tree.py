@@ -123,7 +123,7 @@ class Node:
     def predict(self, df):
         return df.apply(self.predict_row, axis=1)
 
-def info_gain(node,attribute):
+def entropy_gain(node,attribute):
     """This will return the information gain that you get from splitting a node
     with that has the data "data" on the attribute "attribute"
     """
@@ -151,9 +151,9 @@ def impurity(count_list):
         product *= count
         total += count
         values += 1
-    return  1 - (product / (total**values))
+    return (product / (total**values))
 
-def var_impurity(node, attribute):  
+def impurity_gain(node, attribute):  
     """This will return the information gain that you get from splitting a node
     with that has the data "data" on the attribute "attribute"
     """
