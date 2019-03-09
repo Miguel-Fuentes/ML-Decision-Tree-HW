@@ -144,6 +144,8 @@ def impurity(count_list):
     ''' This function takes a list of counts i.e. the number of samples in each class
     and returns the impurity of that set of samples
     '''
+    if len(count_list) < 2:
+        return 0
     product = 1
     total = 0
     values = 0

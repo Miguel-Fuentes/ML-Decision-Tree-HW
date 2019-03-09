@@ -37,17 +37,17 @@ tree2 = decision_tree.Node(attributes, [], training_set, decision_tree.impurity_
 print('Trees Initialized, trees will train now this may take up to 5 minutes')
 
 tree1.train()
-# tree2.train()
+tree2.train()
 print('Trees Trained')
 
 test_X = test_set.drop(['Class'],axis='columns')
 test_Y = test_set['Class']
 
 tree1_pred = tree1.predict(test_X)
-# tree2_pred = tree2.predict(test_X)
+tree2_pred = tree2.predict(test_X)
 
 tree1_acc = accuracy_score(test_Y,tree1_pred)
-tree2_acc = 0 #accuracy_score(test_Y,tree2_pred)
+tree2_acc = accuracy_score(test_Y,tree2_pred)
 
 print('Trees Evaluated',
       f'Entropy Based Tree Accuracy: {tree1_acc}',
@@ -55,4 +55,7 @@ print('Trees Evaluated',
       sep='\n')
 
 if printing:
+    print('Entropy Based Tree')
     print(tree1)
+    print('Variance Impurity Based Tree')
+    print(tree2)
