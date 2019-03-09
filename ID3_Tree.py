@@ -1,6 +1,5 @@
 import pandas as pd
 import argparse
-from sklearn.metrics import accuracy_score
 import decision_tree # this is the moduole where we write the node class and implement the algorithm
 
 # Here we initialize a parser to read the command line arguments to the script
@@ -40,22 +39,22 @@ tree1.train()
 tree2.train()
 print('Trees Trained')
 
-test_X = test_set.drop(['Class'],axis='columns')
-test_Y = test_set['Class']
-
-tree1_pred = tree1.predict(test_X)
-tree2_pred = tree2.predict(test_X)
-
-tree1_acc = accuracy_score(test_Y,tree1_pred)
-tree2_acc = accuracy_score(test_Y,tree2_pred)
-
 print('Trees Evaluated',
-      f'Entropy Based Tree Accuracy: {tree1_acc}',
-      f'Variance Impurity Based Tree Accuracy: {tree2_acc}',
+      f'Entropy Based Tree Accuracy: {decision_tree.accuracy(tree1, test_set)}',
+      f'Variance Impurity Based Tree Accuracy: {decision_tree.accuracy(tree2, test_set)}',  
+      sep='\n')
+
+tree1 = tree1.post_pruning(args.L[0], args.K[0], validation_set)
+tree2 = tree2.post_pruning(args.L[0], args.K[0], validation_set)
+
+print('Trees Pruned',
+      f'Entropy Based Tree Accuracy Post Pruning: {decision_tree.accuracy(tree1, test_set)}',
+      f'Variance Impurity Based Tree Accuracy Post Pruning: {decision_tree.accuracy(tree2, test_set)}',  
       sep='\n')
 
 if printing:
-    print('Entropy Based Tree')
-    print(tree1)
-    print('Variance Impurity Based Tree')
-    print(tree2)
+    print('Printing trees post pruning',
+          'Entropy Based Tree',
+          tree1,
+          'Variance Impurity Based Tree',
+          tree2, sep='\n')

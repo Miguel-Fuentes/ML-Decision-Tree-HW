@@ -1,10 +1,14 @@
 import pandas as pd
 import numpy as np
 
+import copy
+import random
+
 from collections import namedtuple
 from collections import Counter
 
 from scipy.stats import entropy
+from sklearn.metrics import accuracy_score
 
 # These tuples will store associated pairs of data
 gain_tuple = namedtuple('gain_tuples',['node','attribute','gain'])
@@ -109,6 +113,31 @@ class Node:
             return 1
         return None
     
+    def inner_nodes(self):
+        inner_nodes = []
+        fringe = [self]
+        while fringe:
+            node = fringe.pop(0)
+            if node.val1 != None:
+                fringe.append(node.val1)
+                fringe.append(node.val0)
+                inner_nodes.append(node)
+        return inner_nodes
+    
+    def post_pruning(self, l , k, validation_data):
+        best_tree = self
+        best_acc = accuracy(self, validation_data)
+        for i in range (1, l):
+            new_tree = copy.deepcopy(self)
+            m = random.randint(1, k)
+            for j in range(1, m):
+                target_node = random.choice(new_tree.inner_nodes())
+                convert_to_leaf(new_tree, target_node)
+            new_acc = accuracy(new_tree, validation_data)
+            if new_acc > best_acc:
+                best_tree, best_acc = new_tree, new_acc
+        return best_tree
+    
     def predict_row(self, row):
         current_node = self
         result = self.result
@@ -179,5 +208,25 @@ def filter_data(data,filters):
     final_filter = pd.Series(np.array([True] * data.shape[0]))
     for attribute, value in filters:
         final_filter &= data[attribute] == value
-    return data[final_filter]		
+    return data[final_filter]
+
+def convert_to_leaf(tree, target_node):
+    current_node = tree
+    for _, val in target_node.ancestors:
+        if val == 0:
+            current_node = current_node.val0
+        else:
+            current_node = current_node.val1
+    subset = filter_data(tree.data, current_node.ancestors)
+    counts = Counter(subset['Class'])
+    if counts[1] > counts[0]:
+        current_node.result = 1
+    else:
+        current_node.result = 0
+    current_node.attributes, current_node.val1, current_node.val0 = [], None, None
 			
+def accuracy(tree, data):
+    test_X = data.drop(['Class'],axis='columns')
+    test_Y = data['Class']
+    pred = tree.predict(test_X)
+    return accuracy_score(test_Y,pred)
