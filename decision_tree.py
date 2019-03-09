@@ -131,8 +131,12 @@ class Node:
             new_tree = copy.deepcopy(self)
             m = random.randint(1, k)
             for j in range(1, m):
-                target_node = random.choice(new_tree.inner_nodes())
-                convert_to_leaf(new_tree, target_node)
+                inner_nodes = new_tree.inner_nodes()
+                if inner_nodes:
+                    target_node = random.choice(inner_nodes)
+                    convert_to_leaf(new_tree, target_node)
+                else:
+                    break
             new_acc = accuracy(new_tree, validation_data)
             if new_acc > best_acc:
                 best_tree, best_acc = new_tree, new_acc
@@ -140,13 +144,13 @@ class Node:
     
     def predict_row(self, row):
         current_node = self
-        result = self.result
-        while result == None and current_node.val0 != None:
+        while current_node.result == None and current_node.val0 != None:
             if row[current_node.split_attr] == 0:
                 current_node = current_node.val0
             else:
                 current_node = current_node.val1
-            result = current_node.result
+        if current_node.result not in [0,1]:
+            return 0
         return current_node.result
     
     def predict(self, df):
