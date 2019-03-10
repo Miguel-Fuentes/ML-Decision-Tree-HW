@@ -1,5 +1,16 @@
 # ML-Decision-Tree-HW
 
+> Dependencies used
+```
+pandas
+numpy
+copy
+random
+namedtuple, Counter from collections
+entropy from scipy.stats
+accuracy_score from sklearn.metrics
+```
+
 ### Run this command in this directory to train a decision tree with ID3 algorithm and the resulting output will consist of accuracies of entropy and impurity heuristics along with the corresponding trees if print option is selected
 
 `python3 ID3_Tree.py <L> <K> <training-set> <validation-set> <test-set> <to-print>`
